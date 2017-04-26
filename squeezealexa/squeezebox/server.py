@@ -354,9 +354,10 @@ class Server(object):
     def previous(self, player_id=None):
         self.player_request("playlist jump -1", player_id=player_id)
 
-    def playlist_play(self, path):
-        """Play song immediately"""
-        self.player_request("playlist play %s" % (urllib.quote(path)))
+    def playlist_play(self, path, player_id=None):
+        """Play song / playlist immediately"""
+        self.player_request("playlist play %s" % (urllib.quote(path)),
+                            player_id=player_id)
 
     def playlist_clear(self):
         self.player_request("playlist clear", wait=False)

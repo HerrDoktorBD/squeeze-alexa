@@ -438,10 +438,13 @@ class SqueezeAlexa(AlexaHandler):
         if response is "Scanning":
             response = "The server is currently scanning."
 
+        if 'player_name' not in dict(response):
+            return "probably testing"
+
         print_d("status response = {}".format(response))
 
         player_name = dict(response)['player_name']
-        print_d("player_name = {}".format(player_name))
+        # print_d("player_name = {}".format(player_name))
 
         player_connected = "connected" if dict(response)['player_connected'] is "1" else "disconnected"
         # print_d("player_connected = {}".format(player_connected))
