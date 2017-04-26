@@ -145,6 +145,85 @@
     },
     {
       "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "ScanningIntent"
+    },
+    {
+      "intent": "RescanIntent"
+    },
+    {
+      "intent": "ServerStatusIntent"
+    },
+    {
+      "intent": "AlbumInfoIntent"
+    },
+    {
+      "intent": "ArtistInfoIntent"
+    },
+    {
+      "intent": "GenreInfoIntent"
+    },
+    {
+      "intent": "SongInfoIntent"
+    },
+    {
+      "intent": "AlbumInfoByArtistIntent",
+      "slots": [
+        {
+          "name": "Artist",
+          "type": "ARTIST"
+        }
+      ]
+    },
+    {
+      "intent": "PlayRandomAlbumByArtistIntent",
+      "slots": [
+        {
+          "name": "Artist",
+          "type": "ARTIST"
+        }
+      ]
+    },
+    {
+      "intent": "PlayFirstAlbumByArtistIntent",
+      "slots": [
+        {
+          "name": "Artist",
+          "type": "ARTIST"
+        }
+      ]
+    },
+    {
+      "intent": "PlayLatestAlbumByArtistIntent",
+      "slots": [
+        {
+          "name": "Artist",
+          "type": "ARTIST"
+        }
+      ]
+    },
+    {
+      "intent": "PlayAlbumByArtistIntent",
+      "slots": [
+        {
+          "name": "Album",
+          "type": "ALBUM"
+        },
+        {
+          "name": "Artist",
+          "type": "ARTIST"
+        }
+      ]
+    },
+    {
+      "intent": "PlayAlbumIntent",
+      "slots": [
+        {
+          "name": "Album",
+          "type": "ALBUM"
+        }
+      ]
     }
   ]
 }

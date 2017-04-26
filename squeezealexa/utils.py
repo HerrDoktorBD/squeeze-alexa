@@ -13,6 +13,7 @@
 from __future__ import print_function
 import random
 import re
+import string
 import unicodedata
 import sys
 
@@ -63,3 +64,56 @@ def with_example(template, lst):
     if lst:
         msg += " (e.g. \"%s\")" % random.choice(lst)
     return msg
+
+
+def strip_accents(text):
+    """
+    Strip accents from input String.
+
+    :param text: The input string.
+    :type text: String.
+
+    :returns: The processed String.
+    :rtype: String.
+    """
+    try:
+        text = unicode(text, 'utf-8')
+    except NameError:  # unicode is a default on python 3
+        pass
+    text = unicodedata.normalize('NFD', text)
+    text = text.encode('ascii', 'ignore')
+    text = text.decode("utf-8")
+    return str(text)
+
+
+def recover_key(my_dict, value):
+    """recover the key from the dictionary value"""
+    for a_key in my_dict.keys():
+        if my_dict[a_key] == value:
+            return a_key
+    return None
+
+
+def sanitize_4(user_input, stop_words):
+    """sanitize using standard list comprehension"""
+    return [w for w in user_input if w.lower() not in stop_words]
+
+
+def remove_stop_words(original_s):
+    """remove punctuation"""
+    s2 = original_s.translate(None, string.punctuation)
+    # print_d("s2 (no punct): '%s'" % s2)
+
+    # split
+    user_input = s2.split(" ")
+    stop_words = ["a", "an", "the", "on", "in", "of", "at", "by", "to", "for", "from"]
+
+    # sanitize
+    s1 = sanitize_4(user_input, stop_words)
+
+    # rejoin
+    s3 = " ".join(s1)
+    # print_d("(sanitize_4): '%s'" % s3)
+
+    return s3
+    pass

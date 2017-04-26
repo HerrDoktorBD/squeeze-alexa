@@ -37,7 +37,7 @@ def speech_fragment(text, title=None, reprompt_text=None, end=True):
     return output
 
 
-def audio_response(speech=None, text=None, title=None):
+def audio_response(speech=None, text=None, title=None, url=RESPONSE_AUDIO_FILE_URL):
     output = {
         'directives': [
             {
@@ -46,7 +46,7 @@ def audio_response(speech=None, text=None, title=None):
                 'audioItem': {
                     'stream': {
                         'token': 'beep',
-                        'url': RESPONSE_AUDIO_FILE_URL,
+                        'url': url,
                         'offsetInMilliseconds': 0
                     }
                 }
@@ -66,8 +66,7 @@ def audio_response(speech=None, text=None, title=None):
     return _build_response(output)
 
 
-def speech_response(title=None, text=None, reprompt_text=None, end=True,
-                    store=None):
+def speech_response(title=None, text=None, reprompt_text=None, end=True, store=None):
     speechlet_response = speech_fragment(text=text, title=title,
                                          reprompt_text=reprompt_text, end=end)
     return _build_response(speechlet_response, store=store)

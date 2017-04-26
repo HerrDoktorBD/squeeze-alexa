@@ -12,10 +12,10 @@
 
 from __future__ import print_function
 
+import re
 import time
 
 from squeezealexa.utils import with_example, PY2, print_d
-
 if PY2:
     import urllib
 else:
@@ -54,7 +54,7 @@ class Server(object):
 
     _TIMEOUT = 10
     _MAX_FAILURES = 3
-    _MAX_CACHE_SECS = 600
+    _MAX_CACHE_SECS = 60  # 600
 
     def __init__(self, ssl_wrap, user=None, password=None,
                  cur_player_id=None, debug=False):
@@ -68,7 +68,7 @@ class Server(object):
             print_d("Authenticated with %s!" % self)
         self.players = {}
         self.refresh_status()
-        self.cur_player_id = cur_player_id or list(self.players)[0]
+        self.cur_player_id = cur_player_id or self.players.keys()[0]
         print_d("Default player is now %s " % self.cur_player_id[-5:])
         self.__genres = []
         self.__playlists = []
@@ -99,7 +99,8 @@ class Server(object):
                 return reply[0]
         raise SqueezeboxException("Unprocessable command or login error")
 
-    def _unquote(self, response):
+    @staticmethod
+    def _unquote(response):
         return ' '.join(urllib.unquote(s) for s in response.split(' '))
 
     def _request(self, lines, raw=False, wait=True):
@@ -115,7 +116,7 @@ class Server(object):
             return []
         if not (lines and len(lines)):
             return []
-        lines = [str.rstrip(l) for l in lines]
+        # lines = [str.rstrip(l) for l in lines]
 
         first_word = lines[0].split()[0]
         if not (self.ssl_wrap.is_connected or first_word == 'login'):
@@ -123,7 +124,8 @@ class Server(object):
             return
 
         if self._debug:
-            print_d("<<<< " + "\n..<< ".join(lines))
+            print_d("sent <<<< " + "\n..<< ".join(lines))
+
         request = "\n".join(lines) + "\n"
         raw_response = self.ssl_wrap.communicate(request, wait=wait)
         if not wait:
@@ -131,35 +133,115 @@ class Server(object):
         if not raw_response:
             raise SqueezeboxException(
                 "No further response from %s. Login problem?" % self)
+
         raw_response = raw_response.rstrip("\n")
         response = raw_response if raw else self._unquote(raw_response)
+
         if self._debug:
-            print_d(">>>> " + "\n..>> ".join(response.splitlines()))
+            print_d("rec >>>> " + "\n..>> ".join(response.splitlines()))
 
         def start_point(text):
+
             if first_word == 'login':
                 return 6
+
             delta = -1 if text.endswith('?') else 1
-            return len(self._unquote(text) if raw else text) + delta
+
+            start = len(self._unquote(text) if raw else text) + delta
+            return start
 
         resp_lines = response.splitlines()
         if len(lines) != len(resp_lines):
             raise ValueError("Response problem: %s != %s"
                              % (lines, resp_lines))
-        return [resp_line[start_point(line):]
-                for line, resp_line in zip(lines, resp_lines)]
 
-    def __pairs_from(self, response):
+        output = [resp_line[start_point(line):]
+                  for line, resp_line in zip(lines, resp_lines)]
+        return output
+
+    @staticmethod
+    def __pairs_from(response):
         """Split and unescape a response"""
+
+        # print_d("__pairs_from, response: %s" % response)
+
         def demunge(string):
             s = urllib.unquote(string)
             return tuple(s.split(':', 1))
+
+        # output = filter(lambda t: len(t) == 2,
+        #                 map(demunge, response.split(' ')))
         demunged = map(demunge, response.split(' '))
-        return [d for d in demunged if len(d) == 2]
+        output = [d for d in demunged if len(d) == 2]
+        # print_d("output: %s" % output)
+        return output
+
+    @staticmethod
+    def __pairs_from2(response):
+        """
+        Split and unescape a response
+
+        input:
+            :10382150 artist:Olafur Arnalds
+            id:10388296 artist:Ólafur Arnalds
+            id:10380560 artist:Ólafur Arnalds And Nils Frahm
+            id:10380558 artist:Ólafur Arnalds & Nils Frahm
+            count:4
+
+        output:
+            {'10388296': '\xc3\x93lafur Arnalds',
+             '10380558': '\xc3\x93lafur Arnalds & Nils Frahm',
+             '10380560': '\xc3\x93lafur Arnalds And Nils Frahm',
+              None: 'Olafur Arnalds'}
+
+        input:
+            albums 0 255 artist_id%3A10378560 tags%3Aly
+            id%3A7129733 album%3ABlackfield year%3A2005
+            id%3A7129734 album%3ABlackfield%20II year%3A2007
+            id%3A7129736 album%3ABlackfield%20IV year%3A2013
+            id%3A7129737 album%3ABlackfield%20V year%3A2017
+            id%3A7129735 album%3AWelcome%20to%20My%20DNA year%3A2011
+            count%3A5
+
+        output:
+            [('id', '7129733'), ('album', 'Blackfield'), ('year', '2005'),
+             ('id', '7129734'), ('album', 'Blackfield II'), ('year', '2007'),
+             ('id', '7129736'), ('album', 'Blackfield IV'), ('year', '2013'),
+             ('id', '7129737'), ('album', 'Blackfield V'), ('year', '2017'),
+             ('id', '7129735'), ('album', 'Welcome to My DNA'), ('year', '2011'),
+             ('count', '5')]
+
+        input:
+            artists 0 255 search:blackfield
+            id:10378560 artist:Blackfield
+            count:1
+
+        output:
+           [('id', '10378560'), ('artist', 'Blackfield'),
+            ('count', '1')]
+        """
+        # print_d("__pairs_from2, response: %s" % response)
+
+        def demunge(string):
+            s = urllib.unquote(string)
+
+            return tuple(s.split(':', 1))
+
+        words = "|".join(["id", "album", "artist", "count", "year"])
+        pattern = r"(^|\W)({kwds})(?=\W|$)".format(kwds=words)
+        d = re.sub(pattern, r"_\2", response)[1:]
+
+        # print_d("__pairs_from2, d: %s" % d)
+
+        output = filter(lambda t: len(t) == 2,
+                        map(demunge, d.split('_')))
+        # print_d("__pairs_from2, output: %s" % output)
+        return output
 
     def refresh_status(self):
-        """ Updates the list of the Squeezebox players available and other
-        server metadata."""
+        """Updates the list of the Squeezebox players available and other
+         server metadata."""
+
         print_d("Refreshing server and player statuses...")
         pairs = self.__pairs_from(
             self.__a_request("serverstatus 0 99", raw=True))
@@ -183,10 +265,12 @@ class Server(object):
 
     def player_request(self, line, player_id=None, raw=False, wait=True):
         """Makes a single request to a particular player (or the current)"""
+
         try:
             player_id = (player_id or
                          self.cur_player_id or
                          list(self.players.values())[0]["playerid"])
+
             return self._request(["%s %s" % (player_id, line)],
                                  raw=raw, wait=wait)[0]
         except IndexError:
@@ -194,10 +278,12 @@ class Server(object):
 
     def play(self, player_id=None):
         """Plays the current song"""
+
         self.player_request("play", player_id=player_id)
 
     def play_random_mix(self, genre_list, player_id=None):
         """Uses the (standard) Random Mix plugin"""
+
         gs = genre_list or []
         commands = ["randomplaygenreselectall 0"]
         commands += ["randomplaychoosegenre %s 1" % urllib.quote(g)
@@ -217,25 +303,30 @@ class Server(object):
 
     def is_stopped(self, player_id=None):
         """Returns whether the player is in any sort of non-playing mode"""
+
         response = self.player_request("mode ?", player_id=player_id)
         return "play" != response
 
     def get_current(self, player_id=None):
-        # return self.player_request("current_title ?", player_id=player_id)
         return self.get_status(player_id)
 
     def get_track_details(self, player_id=None):
-        keys = ["genre", "artist", "current_title"]
+        # keys = ["genre", "artist", "current_title"]
+        keys = ["current_title", "album", "artist"]
         pid = player_id or self.cur_player_id
-        responses = self._request(["%s %s ?" % (pid, s)
-                                   for s in keys])
-        return dict(zip(keys, responses))
+
+        response = self._request(["%s %s ?" % (pid, s)
+                                  for s in keys])
+        # print_d(response)
+        # response: ['Lit', 'Kiasmos (HDTracks 24-44.1)', 'Kiasmos']
+        return dict(zip(keys, response))
 
     @property
     def genres(self):
         if not self.__genres:
-            resp = self.__a_request("genres 0 255", raw=True)
-            self.__genres = [v for k, v in self.__pairs_from(resp)
+            response = self.__a_request("genres 0 255", raw=True)
+            print_d(response)
+            self.__genres = [v for k, v in self.__pairs_from(response)
                              if k == 'genre']
             print_d(with_example("Loaded %d LMS genres", self.__genres))
         return self.__genres
@@ -250,8 +341,11 @@ class Server(object):
         return self.__playlists
 
     def get_status(self, player_id=None):
+        """ask the server for a status"""
         response = self.player_request("status - 2", player_id=player_id,
                                        raw=True)
+        if "rescan" in response:
+            return "Scanning"
         return dict(self.__pairs_from(response))
 
     def next(self, player_id=None):
@@ -260,10 +354,9 @@ class Server(object):
     def previous(self, player_id=None):
         self.player_request("playlist jump -1", player_id=player_id)
 
-    def playlist_play(self, path, player_id=None):
-        """Play song / playlist immediately"""
-        self.player_request("playlist play %s" % (urllib.quote(path)),
-                            player_id=player_id)
+    def playlist_play(self, path):
+        """Play song immediately"""
+        self.player_request("playlist play %s" % (urllib.quote(path)))
 
     def playlist_clear(self):
         self.player_request("playlist clear", wait=False)
@@ -315,3 +408,86 @@ class Server(object):
 
     def __str__(self):
         return "Squeezebox server at %s" % self.ssl_wrap
+
+    def get_artists_with_search_term(self, search_term):
+        """
+        ask the server for artists matching search_term
+        e.g. artists 0 255 search:blackfield
+        """
+
+        # if isinstance(search_term, unicode):
+        #    print_d("unicode search_term")
+        #    search_term = str(search_term)
+
+        # print_d("search_term: %s" % search_term)
+        # q_search_term = urllib.quote(search_term)
+        # print_d("quoted search_term: %s" % q_search_term)
+
+        cmd = ("artists 0 255 search:%s" % search_term)
+        response = self.player_request(cmd)
+
+        if "rescan" in response:
+            return "Scanning"
+
+        return self.__pairs_from2(response)
+
+    def get_albums_with_search_term(self, search_term):
+        """
+        ask the server for albums matching search_term
+        e.g. albums 0 255 search:last samurai
+        """
+
+        cmd = ("albums 0 255 search:%s tags:lay" % search_term)
+        response = self.player_request(cmd)
+        if "rescan" in response:
+            return "Scanning"
+
+        return self.__pairs_from2(response)
+
+    def get_albums_with_artist_id(self, artist_id):
+        """
+        ask the server for albums belonging to artist_id
+        e.g. albums 0 255 artist_id:10378560 tags:ly
+        """
+
+        cmd = ("albums 0 255 artist_id:%s tags:ly" % artist_id)
+        response = self.player_request(cmd)
+        if "rescan" in response:
+            return "Scanning"
+
+        return self.__pairs_from2(response)
+
+    def play_album_with_id(self, album_id, player_id=None):
+        """
+        ask the server to play the album identified by album_id
+        """
+        commands = (["playlist shuffle 0",
+                     "playlistcontrol cmd:load album_id:%s" % album_id])
+        pid = player_id or self.cur_player_id
+
+        return self._request(["%s %s" % (pid, com) for com in commands])
+
+    def is_scanning(self):
+        """
+        ask the server if it's currently scanning the library
+        """
+        response = self.player_request("rescan ?")
+        if "rescan" in response:
+            return "Scanning"
+
+        return None
+
+    def rescan(self):
+        """
+        ask the server to rescan the library
+        """
+        response = self.player_request("rescan ?")
+        if "rescan" in response:
+            return "Scanning"
+
+        return self.__a_request("rescan") or 0
+
+    def get_info_total(self, name):
+        """ask the server for the total number of items of name"""
+
+        return self.__a_request("info total %s ?" % name) or 0

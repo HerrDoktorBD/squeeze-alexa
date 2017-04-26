@@ -51,3 +51,35 @@ class Custom(object):
     INC_VOL, DEC_VOL = ("%sVolumeIntent" % s for s in ["Increase", "Decrease"])
     CURRENT, SELECT_PLAYER = ("%sIntent" % s
                               for s in ["NowPlaying", "SelectPlayer"])
+
+
+class ServerStatus(object):
+    (STATUS,) = ("%sIntent" % s
+                 for s in ["ServerStatus"])
+    (INFO,) = ("%sIntent" % s
+               for s in ["Scanning"])
+    (RESCAN,) = ("%sIntent" % s
+                 for s in ["Rescan"])
+
+
+class Info(object):
+    (ALBUM, ARTIST, GENRE, SONG) = ("%sInfoIntent" % s
+                                    for s in ["Album", "Artist",
+                                              "Genre", "Song"])
+
+
+class AlbumInfoByArtist(object):
+    (INFO,) = ("%sIntent" % s
+               for s in ["AlbumInfoByArtist"])
+
+
+class AlbumByArtist(object):
+    (RANDOM, FIRST, LATEST) = ("Play%sAlbumByArtistIntent" % s
+                               for s in ["Random", "First", "Latest"])
+    (PLAY,) = ("%sIntent" % s
+               for s in ["PlayAlbumByArtist"])
+
+
+class PlayAlbum(object):
+    (PLAY,) = ("%sIntent" % s
+               for s in ["PlayAlbum"])

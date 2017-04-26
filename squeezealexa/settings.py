@@ -17,7 +17,6 @@ This file contains settings with everything set to the defaults
 At the very least you need to set SERVER_HOSTNAME, SERVER_SSL_PORT.
 """
 
-
 # --------------------------- Amazon / Alexa Config ---------------------------
 
 APPLICATION_ID = None
@@ -28,6 +27,7 @@ A value of None means verification of the request's Skill will be disabled.
 RESPONSE_AUDIO_FILE_URL = \
     "https://s3.amazonaws.com/declension-alexa-media/silence.mp3"
 """Change this to your own HTTPS MP3 file, which must be accessible to Alexa"""
+OPERATIONAL_AUDIO_FILE_URL = 'https://s3.amazonaws.com/comicland-alexa-media/operational.mp3'
 
 # ----------------------------- Squeezebox Config -----------------------------
 

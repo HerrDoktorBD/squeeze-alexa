@@ -20,6 +20,8 @@ SetVolumeIntent set volume to {Volume} in {Player}
 SetVolumeIntent set {Player} to {Volume} percent
 
 NowPlayingIntent what song is this
+NowPlayingIntent what is this song
+NowPlayingIntent what's this song
 NowPlayingIntent what is playing
 NowPlayingIntent what's playing
 NowPlayingIntent what is playing in the {Player}
@@ -27,7 +29,6 @@ NowPlayingIntent what is playing on the {Player} player
 NowPlayingIntent what's playing on the {Player} player
 NowPlayingIntent what are we listening to in the {Player}
 NowPlayingIntent what we are listening to in the {Player}
-
 
 SelectPlayerIntent select {Player}
 SelectPlayerIntent select {Player} player
@@ -61,7 +62,6 @@ TurnOffPlayerIntent switch {Player} off
 TurnOffPlayerIntent switch off {Player}
 TurnOffPlayerIntent switch {Player} player off
 
-
 TurnOnPlayerIntent turn {Player} on
 TurnOnPlayerIntent turn on {Player}
 TurnOnPlayerIntent turn {Player} player on
@@ -69,15 +69,19 @@ TurnOnPlayerIntent switch {Player} on
 TurnOnPlayerIntent switch on {Player}
 TurnOnPlayerIntent switch {Player} player on
 
-
 AllOffIntent shut down
+AllOffIntent off
+AllOffIntent switch off
 AllOffIntent turn everything off
 AllOffIntent turn all players off
 
+AllOnIntent on
+AllOnIntent switch on
 AllOnIntent turn everything on
 AllOnIntent turn all players on
 
 PlayRandomMixIntent play some {Genre}
+PlayRandomMixIntent play some {Genre} music
 PlayRandomMixIntent play some {Genre} and {SecondaryGenre}
 PlayRandomMixIntent play some {Genre} and some {SecondaryGenre}
 PlayRandomMixIntent play some {Genre} some {SecondaryGenre} and some {TertiaryGenre}
@@ -91,3 +95,70 @@ PlayPlaylistIntent play my {Playlist} playlist in {Player}
 PlayPlaylistIntent play the {Playlist} playlist
 PlayPlaylistIntent play the {Playlist} playlist on {Player}
 PlayPlaylistIntent play the {Playlist} playlist in {Player}
+
+ScanningIntent is scanning
+ScanningIntent is the server scanning
+
+RescanIntent rescan
+RescanIntent rescan library
+
+ServerStatusIntent what's the server status
+ServerStatusIntent what is the server status
+ServerStatusIntent what the server status is
+ServerStatusIntent for a server status
+
+AlbumInfoIntent how many albums
+AlbumInfoIntent how many albums are there
+AlbumInfoIntent how many albums do i have
+
+ArtistInfoIntent how many artists
+ArtistInfoIntent how many artists are there
+
+GenreInfoIntent how many genres
+GenreInfoIntent how many genres are there
+
+SongInfoIntent how many songs
+SongInfoIntent how many songs are there
+
+AlbumInfoByArtistIntent how many albums by {Artist}
+AlbumInfoByArtistIntent how many albums are there by {Artist}
+AlbumInfoByArtistIntent how many albums in the library by {Artist}
+AlbumInfoByArtistIntent how many albums are there in the library by {Artist}
+
+PlayRandomAlbumByArtistIntent play {Artist}
+PlayRandomAlbumByArtistIntent play any {Artist}
+PlayRandomAlbumByArtistIntent play some {Artist}
+PlayRandomAlbumByArtistIntent play something by {Artist}
+PlayRandomAlbumByArtistIntent play an album by {Artist}
+PlayRandomAlbumByArtistIntent play any album by {Artist}
+
+PlayFirstAlbumByArtistIntent play an early {Artist}
+PlayFirstAlbumByArtistIntent play first album by {Artist}
+PlayFirstAlbumByArtistIntent play {Artist} earliest album
+PlayFirstAlbumByArtistIntent play {Artist} first album
+PlayFirstAlbumByArtistIntent play the first album by {Artist}
+PlayFirstAlbumByArtistIntent play the first album from {Artist}
+PlayFirstAlbumByArtistIntent play the earliest {Artist}
+PlayFirstAlbumByArtistIntent play the earliest by {Artist}
+PlayFirstAlbumByArtistIntent play the earliest from {Artist}
+PlayFirstAlbumByArtistIntent play the earliest album by {Artist}
+PlayFirstAlbumByArtistIntent play the earliest album from {Artist}
+
+PlayLatestAlbumByArtistIntent play last album by {Artist}
+PlayLatestAlbumByArtistIntent play {Artist} last album
+PlayLatestAlbumByArtistIntent play {Artist} latest
+PlayLatestAlbumByArtistIntent play {Artist} latest album
+PlayLatestAlbumByArtistIntent play the last album by {Artist}
+PlayLatestAlbumByArtistIntent play the last album from {Artist}
+PlayLatestAlbumByArtistIntent play the latest {Artist}
+PlayLatestAlbumByArtistIntent play the latest by {Artist}
+PlayLatestAlbumByArtistIntent play the latest from {Artist}
+PlayLatestAlbumByArtistIntent play the latest album by {Artist}
+PlayLatestAlbumByArtistIntent play the latest album from {Artist}
+
+PlayAlbumByArtistIntent play {Album} by {Artist}
+PlayAlbumByArtistIntent play album {Album} by {Artist}
+PlayAlbumByArtistIntent play {Album} by artist {Artist}
+PlayAlbumByArtistIntent play album {Album} by artist {Artist}
+
+PlayAlbumIntent play {Album}
