@@ -51,8 +51,8 @@ class AllIntentHandlingTest(TestCase):
             intent = {'requestId': 'abcd', 'slots': {}}
             raw = func(alexa, intent, session, None)
 
-            if 'response' not in dict(raw):
-                return  # probably testing
+            if 'response' not in raw:
+                continue  # probably testing
 
             response = raw['response']
             assert 'directives' in response or 'outputSpeech' in response
