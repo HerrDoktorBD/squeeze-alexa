@@ -25,7 +25,8 @@ from squeezealexa.alexa.utterances import Utterances
 from squeezealexa.settings import *
 from squeezealexa.squeezebox.server import Server, print_d
 from squeezealexa.ssl_wrap import SslSocketWrapper
-from squeezealexa.utils import english_join, sanitise_text, strip_accents, recover_key, remove_stop_words
+from squeezealexa.utils import english_join, sanitise_text, strip_accents, \
+    recover_key, remove_stop_words
 
 
 class MinConfidences(object):
@@ -355,7 +356,7 @@ class SqueezeAlexa(AlexaHandler):
             print_d("{0} was the best guess for '{1}' from {2}"
                     .format(result, player_name, by_name.keys()))
 
-            if result and int(result[1]) >=  MinConfidences.PLAYER:
+            if result and int(result[1]) >= MinConfidences.PLAYER:
                 return by_name.get(result[0]).id
 
         return server.cur_player_id if defaulting else None
@@ -446,7 +447,8 @@ class SqueezeAlexa(AlexaHandler):
         player_name = dict(response)['player_name']
         # print_d("player_name = {}".format(player_name))
 
-        player_connected = "connected" if dict(response)['player_connected'] is "1" else "disconnected"
+        player_connected = "connected" \
+            if dict(response)['player_connected'] is "1" else "disconnected"
         # print_d("player_connected = {}".format(player_connected))
 
         return audio_response(title=player_name,
@@ -465,7 +467,9 @@ class SqueezeAlexa(AlexaHandler):
 
         # print_d("items_dict: {}".format(items_dict))
         # {album_id: (album_year, album_name, artist_name), etc.}
-        # {'7136042': ('2012', 'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn', '\xc3\x81sgeir Trausti'),
+        # {'7136042': ('2012',
+        #              'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
+        #              '\xc3\x81sgeir Trausti'),
         #  '7129185': ('2014', 'Going Home (EP)', '\xc3\x81sgeir'),
         #  '7129184': ('2013', 'In the Silence', '\xc3\x81sgeir')}
 
@@ -474,7 +478,8 @@ class SqueezeAlexa(AlexaHandler):
 
         # print_d("item_list: {}".format(item_list))
         # [(album_year, album_name, artist_name), etc.]
-        # [('2012', 'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn', '\xc3\x81sgeir Trausti'),
+        # [('2012', 'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
+        #           '\xc3\x81sgeir Trausti'),
         #  ('2014', 'Going Home (EP)', '\xc3\x81sgeir'),
         #  ('2013', 'In the Silence', '\xc3\x81sgeir')]
 
@@ -482,7 +487,8 @@ class SqueezeAlexa(AlexaHandler):
         values_list.sort(key=lambda x: x[0])
 
         # print_d("values_list (sorted): {}".format(values_list))
-        # [('2012', 'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn', '\xc3\x81sgeir Trausti'),
+        # [('2012', 'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
+        #           '\xc3\x81sgeir Trausti'),
         #  ('2013', 'In the Silence', '\xc3\x81sgeir'),
         #  ('2014', 'Going Home (EP)', '\xc3\x81sgeir')]
 
@@ -493,7 +499,9 @@ class SqueezeAlexa(AlexaHandler):
             sorted_items[key] = value
 
         # print_d("sorted_items: {}".format(sorted_items))
-        # [('7136042', ('2012', 'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn', '\xc3\x81sgeir Trausti')),
+        # [('7136042', ('2012',
+        #               'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
+        #               '\xc3\x81sgeir Trausti')),
         #  ('7129184', ('2013', 'In the Silence', '\xc3\x81sgeir')),
         #  ('7129185', ('2014', 'Going Home (EP)', '\xc3\x81sgeir'))])
         return sorted_items
@@ -535,7 +543,7 @@ class SqueezeAlexa(AlexaHandler):
         for key, val in artist_pairs:
 
             if key == "count":
-                c = val  # no-op
+                pass
             elif key == "id":
                 artist_id = val
             elif key == "artist":
@@ -575,7 +583,8 @@ class SqueezeAlexa(AlexaHandler):
         matching_artists = {}
         for m in matches:
             artist_id = recover_key(artists, m[0])
-            # print_d("artist_id: {0}, artist_name: {1}".format(artist_id, m[0]))
+            # print_d("artist_id: {0}, artist_name: {1}"
+            #                  .format(artist_id, m[0]))
             # 10388130
             matching_artists[artist_id] = artists[artist_id]
 
@@ -806,7 +815,7 @@ class SqueezeAlexa(AlexaHandler):
                 for key, val in album_pairs:
 
                     if key == "count":
-                        c = val  # no-op
+                        pass
                     elif key == "id":
                         album_id = val
                     elif key == "album":
@@ -848,10 +857,11 @@ class SqueezeAlexa(AlexaHandler):
                 for m in matches:
 
                     sr = fuzz.token_sort_ratio(query, m[0])
-                    pr = fuzz.partial_ratio(query, m[0])
-                    set_ratio = fuzz.token_set_ratio(query, m[0])
 
-                    # print_d("sort_ratio: {0}, partial_ratio: {1}, set_ratio: {2}"
+                    # pr = fuzz.partial_ratio(query, m[0])
+                    # set_ratio = fuzz.token_set_ratio(query, m[0])
+                    # print_d("sort_ratio: {0}, partial_ratio: {1},
+                    #        set_ratio: {2}"
                     #        .format(sr, pr, set_ratio))
 
                     if sr > sort_ratio:
@@ -892,7 +902,9 @@ class SqueezeAlexa(AlexaHandler):
 
         sorted_albums = self.get_albums_by_artist(self, server, wanted_artist)
 
-        # [('7136042', ('2012', 'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn', '\xc3\x81sgeir Trausti')),
+        # [('7136042', ('2012',
+        #    'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
+        #    '\xc3\x81sgeir Trausti')),
         #  ('7129184', ('2013', 'In the Silence', '\xc3\x81sgeir')),
         #  ('7129185', ('2014', 'Going Home (EP)', '\xc3\x81sgeir'))])
 
@@ -919,7 +931,8 @@ class SqueezeAlexa(AlexaHandler):
         # print_d(i)
 
         # python 2.x
-        album = sorted_albums.items()[i]  # -> (key, value) tuple of ith element
+        # -> (key, value) tuple of ith element
+        album = sorted_albums.items()[i]
         # print_d("album: {}".format(album))
         # album: ('7129185', ('2014', 'Going Home (EP)', '\xc3\x81sgeir'))
 
@@ -1030,7 +1043,8 @@ class SqueezeAlexa(AlexaHandler):
             # print_d("intent: '{}'".format(intent))
 
             intent_name = intent[u'name']
-            if intent_name == u'PlayAlbumByArtistIntent' or intent_name == u'PlayAlbumIntent':
+            if intent_name == u'PlayAlbumByArtistIntent' or \
+               intent_name == u'PlayAlbumIntent':
 
                 s_error = "Couldn't process album: {0} and/or artist: {1}" \
                     .format(album_slot, artist_slot)
@@ -1065,13 +1079,20 @@ class SqueezeAlexa(AlexaHandler):
             # print_d("{}: '{}'".format(intent_name, album))
 
             if intent_name == u'PlayAlbumByArtistIntent':
-                found_album = self.get_matched_album_by_artist(self, server, album_slot, artist_slot)
+                found_album = self.get_matched_album_by_artist(self,
+                                                               server,
+                                                               album_slot,
+                                                               artist_slot)
 
             elif intent_name == u'PlayAlbumIntent':
-                found_album = self.get_matched_album(self, server, album_slot)
+                found_album = self.get_matched_album(self,
+                                                     server,
+                                                     album_slot)
 
             else:
-                found_album = self.get_one_album_by_artist(server, intent, artist_slot)
+                found_album = self.get_one_album_by_artist(server,
+                                                           intent,
+                                                           artist_slot)
 
             if found_album is None:
 
@@ -1081,7 +1102,9 @@ class SqueezeAlexa(AlexaHandler):
                     print_d("trying random album by artist")
                     artist_slot = album_slot
 
-                    found_album = self.get_one_album_by_artist(server, intent, artist_slot)
+                    found_album = self.get_one_album_by_artist(server,
+                                                               intent,
+                                                               artist_slot)
 
                     if found_album is None:
                         # fine, nothing matches artist or album, bail out
@@ -1093,7 +1116,9 @@ class SqueezeAlexa(AlexaHandler):
 
             # print_d("album: {}".format(album))
             # ('7129185', '2014', 'Going Home (EP)', '\xc3\x81sgeir')
-            # ('7131945', 'Last of the Mohicans, The', '1992', 'Jones, Trevor; Edelman, Randy')
+            # ('7131945', 'Last of the Mohicans, The',
+            #             '1992',
+            #             'Jones, Trevor; Edelman, Randy')
 
             album_id = found_album[0]
             album_year = found_album[1]
@@ -1119,7 +1144,8 @@ class SqueezeAlexa(AlexaHandler):
             # return self.smart_response(text=heading, speech=desc)
 
         if intent_name == u'PlayAlbumByArtistIntent':
-            s_bad = "album: {0} and/or artist: {1}".format(album_slot, artist_slot)
+            s_bad = "album: {0} and/or artist: {1}" \
+                .format(album_slot, artist_slot)
         else:
             s_bad = "artist: %s" % artist_slot
 
@@ -1195,7 +1221,8 @@ class SqueezeAlexa(AlexaHandler):
         """replace specific keywords frok utterance"""
 
         if "season" in album_utterance.lower():
-            album_utterance = album_utterance.replace("season", "s")  # old, new
+            # old, new
+            album_utterance = album_utterance.replace("season", "s")
             print_d("album_utterance now: '%s'" % album_utterance)
 
         return album_utterance

@@ -83,3 +83,15 @@ metadata/audio/
 
 # Amazon
 lambda_function.zip
+
+fuzzywuzzy/__init__.py
+
+fuzzywuzzy/fuzz.py
+
+fuzzywuzzy/process.py
+
+fuzzywuzzy/string_processing.py
+
+fuzzywuzzy/StringMatcher.py
+
+fuzzywuzzy/utils.py
