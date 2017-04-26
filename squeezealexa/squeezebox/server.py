@@ -68,8 +68,11 @@ class Server(object):
             print_d("Authenticated with %s!" % self)
         self.players = {}
         self.refresh_status()
-        self.cur_player_id = cur_player_id or self.players.keys()[0]
+
+        keys = list(self.players)  # returns keys in a list
+        self.cur_player_id = cur_player_id or keys[0]
         print_d("Default player is now %s " % self.cur_player_id[-5:])
+
         self.__genres = []
         self.__playlists = []
         self._created_time = time.time()
@@ -208,7 +211,8 @@ class Server(object):
              ('id', '7129734'), ('album', 'Blackfield II'), ('year', '2007'),
              ('id', '7129736'), ('album', 'Blackfield IV'), ('year', '2013'),
              ('id', '7129737'), ('album', 'Blackfield V'), ('year', '2017'),
-             ('id', '7129735'), ('album', 'Welcome to My DNA'), ('year', '2011'),
+             ('id', '7129735'), ('album', 'Welcome to My DNA'), ('year',
+                                                                      '2011'),
              ('count', '5')]
 
         input:
