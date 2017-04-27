@@ -68,7 +68,7 @@ class SslSocketWrapper(object):
                 data = {k: v for d in subject_data for k, v in d}
             except Exception:
                 data = subject_data
-            print_d("Validated cert for %s" % (data, ))
+            print_d("Validated cert for %s" % (data,))
         self.is_connected = True
 
     @staticmethod
@@ -87,11 +87,11 @@ class SslSocketWrapper(object):
         response = ''
         num_lines = data.count("\n")
         try:
-            self._ssl_sock.sendall(data)
+            self._ssl_sock.sendall(data.encode('utf-8'))
             if not wait:
                 return None
             while not eof:
-                response += self._ssl_sock.recv()
+                response += self._ssl_sock.recv().decode('utf-8')
                 eof = response.count("\n") == num_lines or not response
             return response
         except socket.error as e:
