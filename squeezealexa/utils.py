@@ -66,24 +66,35 @@ def with_example(template, lst):
     return msg
 
 
+# from http://www.carlosble.com/2010/12/understanding-python-and-unicode/
+def get_unicode(str_or_unicode, encoding='utf-8'):
+    if isinstance(str_or_unicode, unicode):
+        return str_or_unicode
+    return unicode(str_or_unicode, encoding, errors='ignore')
+
+
+def get_string(str_or_unicode, encoding='utf-8'):
+    if isinstance(str_or_unicode, unicode):
+        return str_or_unicode.encode(encoding)
+    return str_or_unicode
+
+
 def strip_accents(text):
     """
-    Strip accents from input String.
+    Strip accents from input string.
 
-    :param text: The input string.
-    :type text: String.
+    :param text: input string.
+    :type text: string or unicode.
 
-    :returns: The processed String.
+    :returns: processed string.
     :rtype: String.
     """
-    try:
-        text = unicode(text, 'utf-8')
-    except NameError:  # unicode is a default on python 3
-        pass
+    text = get_unicode(text)
+
     text = unicodedata.normalize('NFD', text)
     text = text.encode('ascii', 'ignore')
-    text = text.decode("utf-8")
-    return str(text)
+
+    return get_string(text)
 
 
 def recover_key(my_dict, value):
