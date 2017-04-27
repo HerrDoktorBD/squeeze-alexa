@@ -106,7 +106,8 @@ def remove_stop_words(original_s):
 
     # split
     user_input = s2.split(" ")
-    stop_words = ["a", "an", "the", "on", "in", "of", "at", "by", "to", "for", "from"]
+    stop_words = ["a", "an", "the", "on", "in",
+                  "of", "at", "by", "to", "for", "from"]
 
     # sanitize
     s1 = sanitize_4(user_input, stop_words)

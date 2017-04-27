@@ -501,9 +501,10 @@ class SqueezeAlexa(AlexaHandler):
             sorted_items[key] = value
 
         # print_d("sorted_items: {}".format(sorted_items))
-        # [('7136042', ('2012',
-        #               'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
-        #               '\xc3\x81sgeir Trausti')),
+        # [('7136042',
+        #  ('2012',
+        #   'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
+        #   '\xc3\x81sgeir Trausti')),
         #  ('7129184', ('2013', 'In the Silence', '\xc3\x81sgeir')),
         #  ('7129185', ('2014', 'Going Home (EP)', '\xc3\x81sgeir'))])
         return sorted_items
@@ -621,7 +622,8 @@ class SqueezeAlexa(AlexaHandler):
 
             # album count for this artist
             # last item is always ('count', '5')
-            this_artist_album_count = int(album_pairs[len(album_pairs) - 1][1])
+            this_artist_album_count = \
+                int(album_pairs[len(album_pairs) - 1][1])
 
             artist_name = matching_artists[artist_id]
             # print_d("album count: {0} for {1}"
@@ -774,7 +776,10 @@ class SqueezeAlexa(AlexaHandler):
         return album_id, album_year, album_name, artist_name
 
     @staticmethod
-    def get_matched_album_by_artist(self, server, wanted_album, wanted_artist):
+    def get_matched_album_by_artist(self,
+                                    server,
+                                    wanted_album,
+                                    wanted_artist):
         """
         given a wanted_album and a wanted_artist,
         return album_id, album_name, album_year, artist_name
@@ -1167,8 +1172,8 @@ class SqueezeAlexa(AlexaHandler):
     def process_artist_slot(artist_utterance):
         """
         swaps an artist's first and last names, if applicable
-        "Olafur Arnalds" becomes "Olafur, Arnalds" 
-        :param artist_utterance: 
+        "Olafur Arnalds" becomes "Olafur, Arnalds"
+        :param artist_utterance:
         :return: artist_utterance:
         """
 
