@@ -9,7 +9,7 @@ squeeze-alexa
 
 This is still in beta, so feedback and help with documenting welcome - please just raise an issue first.
 
-Have a look at this 2-min video for a live demo:[![ScreenShot](https://raw.githubusercontent.com/HerrDoktorBD/squeeze-alexa/master/demo.jpg)](https://youtu.be/D5MuxX0EqQU)
+Have a look at this 2-min video [![ScreenShot](https://raw.githubusercontent.com/HerrDoktorBD/squeeze-alexa/master/demo.jpg)](https://youtu.be/D5MuxX0EqQU)for a live demo of some of the new features.
 
 ### Aims
 
