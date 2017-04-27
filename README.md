@@ -9,6 +9,8 @@ squeeze-alexa
 
 This is still in beta, so feedback and help with documenting welcome - please just raise an issue first.
 
+Have a look at this 2-min video for a live demo:[![ScreenShot](https://raw.githubusercontent.com/HerrDoktorBD/squeeze-alexa/branch/demo.png)](https://youtu.be/D5MuxX0EqQU)
+
 ### Aims
 
  * Intuitive voice control over common music scenarios

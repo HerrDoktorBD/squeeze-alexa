@@ -468,8 +468,8 @@ class SqueezeAlexa(AlexaHandler):
         # print_d("items_dict: {}".format(items_dict))
         # {album_id: (album_year, album_name, artist_name), etc.}
         # {'7136042': ('2012',
-        #              'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
-        #              '\xc3\x81sgeir Trausti'),
+        #  'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
+        #  '\xc3\x81sgeir Trausti'),
         #  '7129185': ('2014', 'Going Home (EP)', '\xc3\x81sgeir'),
         #  '7129184': ('2013', 'In the Silence', '\xc3\x81sgeir')}
 
@@ -478,8 +478,9 @@ class SqueezeAlexa(AlexaHandler):
 
         # print_d("item_list: {}".format(item_list))
         # [(album_year, album_name, artist_name), etc.]
-        # [('2012', 'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
-        #           '\xc3\x81sgeir Trausti'),
+        # [('2012',
+        #   'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
+        #   '\xc3\x81sgeir Trausti'),
         #  ('2014', 'Going Home (EP)', '\xc3\x81sgeir'),
         #  ('2013', 'In the Silence', '\xc3\x81sgeir')]
 
@@ -487,8 +488,9 @@ class SqueezeAlexa(AlexaHandler):
         values_list.sort(key=lambda x: x[0])
 
         # print_d("values_list (sorted): {}".format(values_list))
-        # [('2012', 'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
-        #           '\xc3\x81sgeir Trausti'),
+        # [('2012',
+        #   'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
+        #   '\xc3\x81sgeir Trausti'),
         #  ('2013', 'In the Silence', '\xc3\x81sgeir'),
         #  ('2014', 'Going Home (EP)', '\xc3\x81sgeir')]
 
@@ -543,7 +545,7 @@ class SqueezeAlexa(AlexaHandler):
         for key, val in artist_pairs:
 
             if key == "count":
-                pass
+                pass  # no-op
             elif key == "id":
                 artist_id = val
             elif key == "artist":
@@ -632,7 +634,7 @@ class SqueezeAlexa(AlexaHandler):
                 for key, val in album_pairs:
 
                     if key == "count":
-                        c = val  # no-op
+                        pass  # no-op
                     elif key == "id":
                         album_id = val
                     elif key == "album":
@@ -641,9 +643,13 @@ class SqueezeAlexa(AlexaHandler):
                         album_year = val
 
                         # add album to the dict
-                        albums[album_id] = (album_year, album_name, artist_name)
-                        # print_d("album added, id: {0}, name: {1}, artist: {2}"
-                        #        .format(album_id, album_name, artist_name))
+                        albums[album_id] = (album_year,
+                                            album_name,
+                                            artist_name)
+                        # print_d("album added, id: {0},
+                        #         name: {1}, artist: {2}"
+                        #        .format(album_id, album_name,
+                        #         artist_name))
 
         # print_d("albums: {}".format(albums))
 
@@ -651,7 +657,10 @@ class SqueezeAlexa(AlexaHandler):
         sorted_albums = self.get_items_sorted_by_year(albums)
 
         # print_d("sorted_albums: {}".format(sorted_albums))
-        # [('7136042', ('2012', 'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn', '\xc3\x81sgeir Trausti')),
+        # [('7136042',
+        #  ('2012',
+        #   'D\xc3\xbdr\xc3\xb0 \xc3\xad dau\xc3\xb0a\xc3\xbe\xc3\xb6gn',
+        #   '\xc3\x81sgeir Trausti')),
         #  ('7129184', ('2013', 'In the Silence', '\xc3\x81sgeir')),
         #  ('7129185', ('2014', 'Going Home (EP)', '\xc3\x81sgeir'))])
 
@@ -683,7 +692,7 @@ class SqueezeAlexa(AlexaHandler):
         for key, val in album_pairs:
 
             if key == "count":
-                c = val  # no-op
+                pass  # no-op
             elif key == "id":
                 album_id = val
             elif key == "album":
@@ -802,7 +811,8 @@ class SqueezeAlexa(AlexaHandler):
 
             # album count for this artist
             # last item is always ('count', '5')
-            this_artist_album_count = int(album_pairs[len(album_pairs) - 1][1])
+            this_artist_album_count = \
+                int(album_pairs[len(album_pairs) - 1][1])
             # print_d("album count: {0} for {1}"
             #         .format(this_artist_album_count, artists[k]))
 
@@ -815,7 +825,7 @@ class SqueezeAlexa(AlexaHandler):
                 for key, val in album_pairs:
 
                     if key == "count":
-                        pass
+                        pass  # no-op
                     elif key == "id":
                         album_id = val
                     elif key == "album":

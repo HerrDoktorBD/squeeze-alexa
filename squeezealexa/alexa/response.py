@@ -37,7 +37,8 @@ def speech_fragment(text, title=None, reprompt_text=None, end=True):
     return output
 
 
-def audio_response(speech=None, text=None, title=None, url=RESPONSE_AUDIO_FILE_URL):
+def audio_response(speech=None, text=None, title=None,
+                   url=RESPONSE_AUDIO_FILE_URL):
     output = {
         'directives': [
             {
@@ -66,9 +67,12 @@ def audio_response(speech=None, text=None, title=None, url=RESPONSE_AUDIO_FILE_U
     return _build_response(output)
 
 
-def speech_response(title=None, text=None, reprompt_text=None, end=True, store=None):
-    speechlet_response = speech_fragment(text=text, title=title,
-                                         reprompt_text=reprompt_text, end=end)
+def speech_response(title=None, text=None, reprompt_text=None, end=True,
+                    store=None):
+    speechlet_response = speech_fragment(text=text,
+                                         title=title,
+                                         reprompt_text=reprompt_text,
+                                         end=end)
     return _build_response(speechlet_response, store=store)
 
 
