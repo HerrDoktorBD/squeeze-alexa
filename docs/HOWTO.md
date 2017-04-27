@@ -202,33 +202,39 @@ Set up your Alexa Skill
  * Upload this `upload.zip` in the AWS Lambda interface ([as described here](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/developing-an-alexa-skill-as-a-lambda-function#about-lambda-functions-and-custom-skills))
 
 #### ...or with the AWS CLI
-You can use the [AWS CLI `update-function-code` call](https://docs.aws.amazon.com/cli/latest/reference/lambda/update-function-code.html) to upload the zip from the manual step.  From the AWS Lambda interface instructions[described here](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html).
+You can use the [AWS CLI `update-function-code` call](https://docs.aws.amazon.com/cli/latest/reference/lambda/update-function-code.html) to upload the zip from the manual step.  From the AWS Lambda interface instructions [described here](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-set-up.html).
 
  * Go to a command line and install python 3: `brew install python3`
  * Install awscli:
    ```
-   pip3 install --user --upgrade awscli```
+   pip3 install --user --upgrade awscli
+   ```
  * Update your path with the python 3 path: `~/Library/Python/3.6/bin` by editing your `bash_profile`.
  * Here's my `~/.bash_profile`:
    ```
-   export PATH=~/Library/Python/3.6/bin:$PATH'```
+   export PATH=~/Library/Python/3.6/bin:$PATH'
+   ```
  * Add region and credentials to aws:
    ```
-   aws configure```
+   aws configure
+   ```
  * Here's my `~/.aws/config`:
    ```
    [default]
-   region = us-east-1```
+   region = us-east-1
+   ```
  * Here's my `~/.aws/credentials`:
    ```
    [default]
    aws_access_key_id = YOUR-ACCESS-KEY
-   aws_secret_access_key = YOUR-SECRET-ACCESS-KEY```
+   aws_secret_access_key = YOUR-SECRET-ACCESS-KEY
+   ```
  * Now you can zip up your lambda function and upload it to AWS:
    ```
    rm *.zip
    zip lambda_function.zip -r squeezealexa/* fuzzywuzzy/* *.py *.pem
-   aws lambda update-function-code --function-name YOUR-FUNCTION-NAME --zip-file fileb://lambda_function.zip```
+   aws lambda update-function-code --function-name YOUR-FUNCTION-NAME --zip-file fileb://lambda_function.zip
+   ```
 
 ### Update the Interaction Model
  * These are kept here in [`metadata/`](metadata/)
